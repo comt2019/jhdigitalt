@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>장항중학교 교사 설문 포털</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            margin-bottom: 35px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .school-badge {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #bdc3c7;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            color: #2c3e50;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .error {
+            background: #ffe6e6;
+            color: #e74c3c;
+            border: 1px solid #ffcdd2;
+        }
+
+        .success {
+            background: #e8f5e8;
+            color: #27ae60;
+            border: 1px solid #c8e6c9;
+        }
+
+        .info {
+            background: #e3f2fd;
+            color: #2980b9;
+            border: 1px solid #bbdefb;
+        }
+
+        .teacher-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .teacher-details {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #bdc3c7;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .teacher-count {
+            background: #f8f9fa;
+            color: #6c757d;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="school-badge">🏫 장항중학교</div>
+            <h1>📊 교사 설문 포털</h1>
+            <div class="subtitle">교사 대상 설문조사</div>
+            <div class="teacher-count">총 21명의 교사 참여</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="teacher">담당 과목을 선택해주세요</label>
+            <select id="teacher">
+                <option value="">과목을 선택하세요</option>
+                <option value="도덕">도덕</option>
+                <option value="체육(조)">체육 (조선생님)</option>
+                <option value="체육(김)">체육 (김선생님)</option>
+                <option value="수학(임)">수학 (임선생님)</option>
+                <option value="과학(김)">과학 (김선생님)</option>
+                <option value="영어(이1)">영어 (이선생님 1)</option>
+                <option value="과학(구)">과학 (구선생님)</option>
+                <option value="음악">음악</option>
+                <option value="역사">역사</option>
+                <option value="가정(혜)">가정 (혜선생님)</option>
+                <option value="영어(이2)">영어 (이선생님 2)</option>
+                <option value="정보">정보</option>
+                <option value="기술가정(연)">기술가정 (연선생님)</option>
+                <option value="국어(성)">국어 (성선생님)</option>
+                <option value="국어(이)">국어 (이선생님)</option>
+                <option value="진로">진로</option>
+                <option value="미술">미술</option>
+                <option value="수학(전)">수학 (전선생님)</option>
+                <option value="사서">사서</option>
+                <option value="특수">특수</option>
+                <option value="사회">사회</option>
+            </select>
+        </div>
+
+        <button class="btn" id="submitBtn" onclick="goToSurvey()">
+            📝 설문조사 참여하기
+        </button>
+        
+        <div class="message error" id="errorMsg"></div>
+        <div class="message success" id="successMsg"></div>
+        <div class="message info" id="infoMsg"></div>
+
+        <div class="teacher-info" id="teacherInfo">
+            <div class="teacher-details" id="teacherDetails"></div>
+        </div>
+
+        <div class="footer">
+            💡 담당하시는 과목을 선택하시면<br>개별 설문조사 링크로 이동합니다.
+        </div>
+    </div>
+
+    <script>
+        // 교사 설문 링크 데이터
+        const teacherSurveys = {
+            "도덕": {
+                id: "1209B3C2",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=1209B3C2&sid=S120001006&gid=2&cid=1",
+                info: "도덕 담당"
+            },
+            "체육(조)": {
+                id: "387E6677",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=387E6677&sid=S120001006&gid=2&cid=1",
+                info: "체육 담당 (조선생님)"
+            },
+            "체육(김)": {
+                id: "578337A1",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=578337A1&sid=S120001006&gid=2&cid=1",
+                info: "체육 담당 (김선생님)"
+            },
+            "수학(임)": {
+                id: "60E04A09",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=60E04A09&sid=S120001006&gid=2&cid=1",
+                info: "수학 담당 (임선생님)"
+            },
+            "과학(김)": {
+                id: "BE02FB44",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=BE02FB44&sid=S120001006&gid=2&cid=1",
+                info: "과학 담당 (김선생님)"
+            },
+            "영어(이1)": {
+                id: "5F5BD427",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=5F5BD427&sid=S120001006&gid=2&cid=1",
+                info: "영어 담당 (이선생님 1)"
+            },
+            "과학(구)": {
+                id: "9D0CB81D",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=9D0CB81D&sid=S120001006&gid=2&cid=1",
+                info: "과학 담당 (구선생님)"
+            },
+            "음악": {
+                id: "CCD41A2A",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=CCD41A2A&sid=S120001006&gid=2&cid=1",
+                info: "음악 담당"
+            },
+            "역사": {
+                id: "9F6B84DB",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=9F6B84DB&sid=S120001006&gid=2&cid=1",
+                info: "역사 담당"
+            },
+            "가정(혜)": {
+                id: "2895B1D9",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=2895B1D9&sid=S120001006&gid=2&cid=1",
+                info: "가정 담당 (혜선생님)"
+            },
+            "영어(이2)": {
+                id: "CDDB1FE0",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=CDDB1FE0&sid=S120001006&gid=2&cid=1",
+                info: "영어 담당 (이선생님 2)"
+            },
+            "정보": {
+                id: "257F9934",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=257F9934&sid=S120001006&gid=2&cid=1",
+                info: "정보 담당"
+            },
+            "기술가정(연)": {
+                id: "7317991D",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=7317991D&sid=S120001006&gid=2&cid=1",
+                info: "기술가정 담당 (연선생님)"
+            },
+            "국어(성)": {
+                id: "B0562519",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=B0562519&sid=S120001006&gid=2&cid=1",
+                info: "국어 담당 (성선생님)"
+            },
+            "국어(이)": {
+                id: "54AF975A",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=54AF975A&sid=S120001006&gid=2&cid=1",
+                info: "국어 담당 (이선생님)"
+            },
+            "진로": {
+                id: "A30C5AB4",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=A30C5AB4&sid=S120001006&gid=2&cid=1",
+                info: "진로 담당"
+            },
+            "미술": {
+                id: "C363FB6C",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=C363FB6C&sid=S120001006&gid=2&cid=1",
+                info: "미술 담당"
+            },
+            "수학(전)": {
+                id: "2BF54F48",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=2BF54F48&sid=S120001006&gid=2&cid=1",
+                info: "수학 담당 (전선생님)"
+            },
+            "사서": {
+                id: "C1E041AB",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=C1E041AB&sid=S120001006&gid=2&cid=1",
+                info: "사서 담당"
+            },
+            "특수": {
+                id: "AD2BA6BD",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=AD2BA6BD&sid=S120001006&gid=2&cid=1",
+                info: "특수 담당"
+            },
+            "사회": {
+                id: "D25EAD60",
+                link: "https://rpssurvey.hrcglobal.com/?qn=q250604_4&pid=D25EAD60&sid=S120001006&gid=2&cid=1",
+                info: "사회 담당"
+            }
+        };
+
+        function goToSurvey() {
+            const selectedTeacher = document.getElementById('teacher').value;
+
+            hideAllMessages();
+
+            // 입력 검증
+            if (!selectedTeacher) {
+                showError('담당 과목을 선택해주세요.');
+                return;
+            }
+
+            // 해당 교사의 설문 링크 찾기
+            const surveyData = teacherSurveys[selectedTeacher];
+
+            if (!surveyData) {
+                showError('선택하신 과목의 설문 링크를 찾을 수 없습니다.');
+                return;
+            }
+
+            // 교사 정보 표시
+            document.getElementById('teacherDetails').innerHTML = 
+                `<strong>${surveyData.info}</strong><br>설문 ID: ${surveyData.id}`;
+            document.getElementById('teacherInfo').style.display = 'block';
+
+            // 버튼 로딩 상태
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = '<span class="loading"></span>설문조사 페이지로 이동 중...';
+            btn.disabled = true;
+
+            showSuccess(`${surveyData.info} 선생님의 설문조사로 이동합니다...`);
+            
+            // 1.5초 후 링크로 이동
+            setTimeout(() => {
+                window.open(surveyData.link, '_blank');
+                
+                // 버튼 복원
+                btn.innerHTML = '📝 설문조사 참여하기';
+                btn.disabled = false;
+                
+                showInfo('새 창에서 설문조사 페이지가 열렸습니다.');
+            }, 1500);
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMsg');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMsg');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        function showInfo(message) {
+            const infoDiv = document.getElementById('infoMsg');
+            infoDiv.textContent = message;
+            infoDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                infoDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        function hideAllMessages() {
+            document.getElementById('errorMsg').style.display = 'none';
+            document.getElementById('successMsg').style.display = 'none';
+            document.getElementById('infoMsg').style.display = 'none';
+            document.getElementById('teacherInfo').style.display = 'none';
+        }
+
+        // 과목 선택 시 메시지 초기화
+        document.getElementById('teacher').addEventListener('change', function() {
+            hideAllMessages();
+        });
+
+        // 엔터 키로 설문 이동
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !document.getElementById('submitBtn').disabled) {
+                goToSurvey();
+            }
+        });
+    </script>
+</body>
+</html>
